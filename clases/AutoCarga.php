@@ -4,7 +4,7 @@
 class AutoCarga {
     
  static public function cargar($clase) {
- $archivo = "./clases/" . str_replace('\\', '/', $clase) . ".php";
+ $archivo = "../clases/" . str_replace('\\', '/', $clase) . ".php";
  if (file_exists($archivo)) {
  require $archivo;
  }

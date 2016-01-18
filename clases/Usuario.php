@@ -4,7 +4,7 @@ class Usuario{
     private $email, $clave, $alias, $fechaalta,$activo, $administrador, $personal;
     
     
-    function __construct($email=null, $clave=null, $alias=null, $fechaalta=null, $activo=null, $administrador=null, $personal=null) {
+    function __construct($email=null, $clave=null, $alias=null, $fechaalta=null, $activo=0, $administrador=0, $personal=0) {
         $this->email = $email;
         $this->clave = $clave;
         $this->alias = $alias;
@@ -23,11 +23,13 @@ class Usuario{
     }
 
     function getAlias() {
-        return $this->alias;
+        return $this->email;
     }
 
     function getFechaalta() {
-        return $this->fechaalta;
+        $time=time();
+        return date("Y-m-d ", $time);
+        
     }
 
     function getActivo() {
@@ -100,6 +102,11 @@ class Usuario{
         foreach ($this as $key=> $valor) {
             $this->$key= Request::req($key);
         }
+    }
+    function getTrozo($email){
+        $pos= strpos($email,"@");
+        $cad=  substr($email, 0,$pos);
+        return $cad;
     }
 }
 

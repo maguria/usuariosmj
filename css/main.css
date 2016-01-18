@@ -1,0 +1,148 @@
+@font-face {
+    font-family:'socialshapes';
+    src: url(../tipografia/socialshapes.ttf);
+}
+
+.body{
+    width:90%;
+}
+
+.index{
+    text-align:center;
+    width:100%;
+}
+.fondo{
+    width:100%;
+}
+
+.fondo img{
+    width:100%;
+}
+
+.formu{
+    width:33%;
+    margin-top:2%;
+    float:left;
+}
+.grande{
+    width:140px;
+    height:50px;
+    background-color:#58ACFA;
+    color:white;
+}
+
+.enviar{
+    width:120px;
+    height:40px;
+    background-color:#6E6E6E;
+    color:white;
+}
+a{
+    text-decoration:none;
+    color:#58ACFA;
+    font-weight:bold;
+}
+h2{
+    color:#58ACFA;
+}
+
+.englobaadmin{
+    width:100%;
+    text-align:center;
+    display:flex;
+    justify-content:center;
+}
+.ad{
+    width:25%;
+    float:left;
+}
+.adper{
+    width:33%;
+    float:left;
+}
+.sesion{
+    background-color:#424242;
+    color:white;
+    width:120px;
+    height:40px;
+}
+
+.pagina{
+    text-align:center;
+}
+.page{
+    width:19.2%;
+    background-color:#585858;
+    color:white;
+}
+.pagedos{
+    background-color:#1C1C1C;
+}
+
+.th{
+    background-color:#58ACFA;
+    color:white;
+}
+
+.blanco{
+    color:white;
+    margin-top:1%;
+}
+
+.thdos{
+    background-color:#81BEF7;
+    color:white;
+}
+.botonazul{
+    background-color:#A9D0F5;
+    color:#424242;
+}
+.tabla{
+    float:left;
+    margin-top:3%;
+    background-color:100%;
+}
+
+.adusu{
+    width:50%;
+    float:left;
+}
+
+h3{
+    color:#585858;
+}
+.google{
+    display:flex;
+    justify-content:center;
+    width:100%;
+    text-align:center;
+}
+.redes{
+    font-family:'socialshapes';
+    font-size:2.5em;
+    color:black;
+}
+input{
+    background-color:#D8D8D8;
+}
+.centratabla{
+    display:flex;
+    justify-content:center;
+    flex-flow:row wrap;
+    
+}
+.tb{
+    width:100%;
+}
+.foto{
+    width:80%;
+    height:120px;
+    margin-top:3%;
+}
+.foto img{
+    width:70%;
+}
+.capafoto{
+    width:45%;
+    float:left;
+}

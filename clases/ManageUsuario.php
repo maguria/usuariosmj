@@ -10,7 +10,7 @@ class ManageUsuario {
     
     function get($email){
         $parametros = array();
-        $parametros["email"]=email;
+        $parametros['email']=$email;
         $this->bd->select($this->tabla, "*", "email = :email",$parametros );
         $row = $this->bd->getRow();
         $usuario = new Usuario();
@@ -23,32 +23,72 @@ class ManageUsuario {
         $parametros["email"]=$email;
         return $this->bd->delete($this->tabla, $parametros);
     }
+    
+    function getUsuarioTrue($email,$clave){
+        $parametros=array();
+        $parametros["email"]=$email;
+        $parametros["clave"]=$clave;
+        $this->bd->select($this->tabla,"count(*)","email=:email and clave=:clave and activo=1",$parametros,"email");
+        $fila= $this->bd->getRow();
+        return $fila[0];   
+    }
+    function esAdmin($email,$clave){
+        $parametros=array();
+        $parametros["email"]=$email;
+        $parametros["clave"]=$clave;
+        $this->bd->select($this->tabla,"count(*)","email=:email and clave=:clave and activo=1 and administrador=1",$parametros,"email");
+        $fila= $this->bd->getRow();
+        return $fila[0];
+    }
+     function esPersonal($email,$clave){
+        $parametros=array();
+        $parametros["email"]=$email;
+        $parametros["clave"]=$clave;
+        $this->bd->select($this->tabla,"count(*)","email=:email and clave=:clave and activo=1 and administrador=0 and personal=1",$parametros,"email");
+        $fila= $this->bd->getRow();
+        return $fila[0];
+    }
+ 
    
     
     function erase(Usuario $usuario){
         return $this->delete($usuario->getEmail());
     }
     
+    function setEm(Usuario $usuario,$pkemail){
+        $parametrosWhere=array();
+        $parametrosWhere["email"]=$pkemail;
+        return $this->bd->update($this->tabla, $usuario->getGenerico(), $parametrosWhere);
+    }
     function set(Usuario $usuario){
-        //update de todos los campos menos el ID, devuelve el num de filas modificadas 
-        
         $parametrosWhere=array();
         $parametrosWhere["email"]=$usuario->getEmail();
         return $this->bd->update($this->tabla, $usuario->getGenerico(), $parametrosWhere);
-        
     }
     
     function insert(Usuario $usuario){
-        //inserta un objeto City y devuelve el ID
+        //inserta un objeto y devuelve el ID
         return $this->bd->insert($this->tabla, $usuario->getGenerico());
     }
+    /*function insert(Usuario $usuario){
+        //inserta un objeto y devuelve el ID
+        $parametros=array();
+        $parametros["email"]=$usuario->getEmail();
+        $parametros["clave"]=$usuario->getClave();
+        $parametros["alias"]=$usuario->getAlias();
+        $parametros["fechaalta"]=$usuario->getFechaalta();
+        $parametros["activo"]=$usuario->getActivo();
+        $parametros["administrador"]=$usuario->getAdministrador();
+        $parametros["personal"]=$usuario->getPersonal();
+        return $this->bd->insert($this->tabla, $parametros);
+    }*/
     
     
     function count($condicion="1=1", $parametros=array()){
         return $this->bd->count($this->tabla, $condicion, $parametros);
     }
     
-    function getList($pagina=1,$orden="",$nrpp=Contants::NRPP){
+    function getListUsuarios($pagina=1,$orden="",$nrpp=Contants::NRPP){
         
         $ordenPredeterminado="$orden, email";
         if($orden==="" || $orden===null){
@@ -56,7 +96,47 @@ class ManageUsuario {
         }
       
         $registroInicial=($pagina-1)*$nrpp;
-        $this->bd->select($this->tabla, "*", "1=1", array(), $ordenPredeterminado,"$registroInicial,$nrpp");
+        $this->bd->select($this->tabla, "*", "administrador=0 and personal=0", array(), $ordenPredeterminado,"$registroInicial,$nrpp");
+        $r=array();
+        /*El 1,10 del ultimo parametro es el limite de registros por pagina*/
+        
+        while($row = $this->bd->getRow()){
+            $usuario = new Usuario();
+            $usuario->set($row);
+            $r[]=$usuario;
+        }
+        return $r;
+    }
+    
+     function getListPersonal($pagina=1,$orden="",$nrpp=Contants::NRPP){
+        
+        $ordenPredeterminado="$orden, email";
+        if($orden==="" || $orden===null){
+             $ordenPredeterminado="email";
+        }
+      
+        $registroInicial=($pagina-1)*$nrpp;
+        $this->bd->select($this->tabla, "*", "administrador=0 and personal=1", array(), $ordenPredeterminado,"$registroInicial,$nrpp");
+        $r=array();
+        /*El 1,10 del ultimo parametro es el limite de registros por pagina*/
+        
+        while($row = $this->bd->getRow()){
+            $usuario = new Usuario();
+            $usuario->set($row);
+            $r[]=$usuario;
+        }
+        return $r;
+    }
+    
+     function getListAdministrador($pagina=1,$orden="",$nrpp=Contants::NRPP){
+        
+        $ordenPredeterminado="$orden, email";
+        if($orden==="" || $orden===null){
+             $ordenPredeterminado="email";
+        }
+      
+        $registroInicial=($pagina-1)*$nrpp;
+        $this->bd->select($this->tabla, "*", "administrador=1", array(), $ordenPredeterminado,"$registroInicial,$nrpp");
         $r=array();
         /*El 1,10 del ultimo parametro es el limite de registros por pagina*/
         

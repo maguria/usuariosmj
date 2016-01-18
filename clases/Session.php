@@ -1,56 +1,70 @@
 <?php
-
 class Session {
-    private static $init = false;
-    private $trusted = true;
-    
-    function __construct() {
-        if(!self::$init){
+    private static $iniciada = false;
+    function __construct($nombre = null) {
+        if (!self::$iniciada){
+            if($nombre!=null){
+                session_name($nombre);
+            }
             session_start();
-            self::$init = true;
-            $ip = $this->get('_ip');
-            $client = $this->get('_client');
-            if($ip === null && $client === null){
-                $this->set('_ip', Server::getClientAddres());
-                $this->set('_client', Server::gerUserAgent());
-            }else{
-                if($ip !== Server::getClientAddres() || $client !== Server::gerUserAgent()){
-                    $this->trusted = false;
-                }
-            }           
+            //$this->_control();
+        }
+        self::$iniciada = true;
+    }
+    private function _control() {
+        $ip = $this->get('_ip');
+        $cliente = $this->get('_cliente');
+        if ($ip == null && $cliente == null) {
+            $this->set('_ip', Server::getClientAddress());
+            $this->set('_cliente', Server::getUserAgent());
+        } else {
+            if ($ip != Server::getClientAddress() || $cliente != Server::getUserAgent()) {
+                $this->destroy();
+            }
         }
     }
     
-    function get($name){
-        if(!$this->trusted){
-            return null;
-        }
-        if(isset($_SESSION[$name])){
-            return $_SESSION[$name];
+    function isLogged(){
+        return $this->getUser()!=null;
+    }
+    function get($nombre) {
+        if (isset($_SESSION[$nombre])) {
+            return $_SESSION[$nombre];
         }
         return null;
-    } 
-    
-    function set($name, $valor){
-        if(!$this->trusted){
-            return null;
-        }
-        $_SESSION[$name]=$valor;
     }
     
-    function delete($name){
-        if(!$this->trusted){
-            return null;
+    function getUser(){
+        return $this->get("_usuario");
+    }
+    function set($nombre, $valor) {
+        $_SESSION[$nombre] = $valor;
+    }
+    function setUser(Usuario $usuario){
+        $this->set("_usuario", $usuario);
+    }
+    
+    function delete($nombre) {
+        if (isset($_SESSION[$nombre])) {
+            unset($_SESSION[$nombre]);
         }
-        if(isset($_SESSION[$name])){
-            unset($_SESSION[$name]);
-        }
-    }    
-    function destroy(){
-        if(!$this->trusted){
-            return null;
-        }
+    }
+    function destroy() {
         session_destroy();
     }
-}
+    //El segundo parametro nos manda al sitio y hacemos un exit
+    function sendRedirect($destino = "index.php", $final = true){
+        header("Location: $destino");
+        if($final ===true){
+            exit();
+        }
+    }
+    function getPacienteSas(){
+        $this->get("_paciente");
+    }
+    function setPacienteSas(PacienteSas $pacienteSas){
+        $this->set("_pacienteSas",$pacienteSas);
+    }
 
+    
+}
